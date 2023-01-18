@@ -22,12 +22,14 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPl
 
 function createHTTPSConfig() {
   // Generate certs for the local webpack-dev-server.
+  console.log("value of dirname", __dirname);
   if (fs.existsSync(path.join(__dirname, "certs"))) {
     const key = fs.readFileSync(path.join(__dirname, "certs", "key.pem"));
     const cert = fs.readFileSync(path.join(__dirname, "certs", "cert.pem"));
-
+    console.log("using custom cert");
     return { key, cert };
   } else {
+    console.log("using localhost cert");
     const pems = selfsigned.generate(
       [
         {
@@ -49,7 +51,7 @@ function createHTTPSConfig() {
               },
               {
                 type: 2,
-                value: "hubs.local"
+                value: "localhost"
               }
             ]
           }
@@ -68,7 +70,7 @@ function createHTTPSConfig() {
   }
 }
 
-const defaultHostName = "hubs.local";
+const defaultHostName = "shadow.eclipsereality.com";
 const host = process.env.HOST_IP || defaultHostName;
 const port = process.env.HOST_PORT || 9090;
 const internalHostname = process.env.INTERNAL_HOSTNAME || defaultHostName;
